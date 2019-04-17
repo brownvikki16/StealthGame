@@ -1,8 +1,10 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "FPSProjectile.h"
+#include "DrawDebugHelpers.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "FPSAIGuard.h"
 
 AFPSProjectile::AFPSProjectile() 
 {
@@ -34,11 +36,25 @@ AFPSProjectile::AFPSProjectile()
 
 void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
+	// Only add impulse and destroy projectile if we hit a physics object
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
-		Destroy();
 	}
+	/*
+	//if player hit an AI Guard, 
+	if (Cast<AFPSAIGuard>(OtherActor))
+	{
+		//DrawDebugSphere(GetWorld(), OtherActor->GetActorLocation(), 100.0f, 12, FColor::Emerald, false, 5.0f, 0, 0.1f);
+		Destroy(OtherActor);
+	}
+	*/
+
+	//make a noise
+	MakeNoise(1.0f, Instigator);
+
+	//destroy itself
+	Destroy();
+
 }

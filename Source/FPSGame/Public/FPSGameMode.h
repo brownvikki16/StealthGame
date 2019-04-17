@@ -11,9 +11,23 @@ class AFPSGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spectating")
+		TSubclassOf<AActor>SpectatingViewportClass;
+	
+
+
 public:
 
 	AFPSGameMode();
+
+	//function to end the mission
+	void CompleteMission(APawn* InstigatorPawn, bool MissionSuccess);
+
+	//function implemented by blueprint, not in code
+	UFUNCTION(BlueprintImplementableEvent, Category = "GameMode")
+		void OnMissionCompleted(APawn* InstigatorPawn, bool MissionSuccess);
 };
 
 
